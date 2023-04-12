@@ -25,7 +25,8 @@ app.get('/api/sessions', (req, res) => {
 
 app.post('/api/sessions', (req, res) => {
     const session = req.body;
-    let insertQuery = `INSERT INTO sessions(title, name, modname, picture) VALUES('${session.title}', '${session.name}', '${session.modname}', '${session.picture}')`;
+    //let insertQuery = `INSERT INTO sessions(title, name, modname, picture) VALUES('${session.title}', '${session.name}', '${session.modname}', '${session.picture}')`;
+    let insertQuery = `INSERT INTO sessions(title, name, modname, picture) VALUES('${session.title}', '${session.name}', 'Dorothy Peterson', 'assets/images/person1.png')`;
 
     client.query(insertQuery, (err, result) =>{
         if(!err){
