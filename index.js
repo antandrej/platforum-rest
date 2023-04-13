@@ -15,7 +15,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.get('/api/sessions', (req, res) => {
-    client.query('SELECT * FROM sessions ORDER BY id', (err, result) =>{
+    client.query('SELECT * FROM sessions ORDER BY id DESC', (err, result) =>{
         if(!err){
             res.send(result.rows);
         }
