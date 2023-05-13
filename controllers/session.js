@@ -25,5 +25,14 @@ const getSessions = (req, res, next) => {
     client.end;
 };
 
+const getSession = (req, res, next) => {
+    client.query(`SELECT * FROM sessions WHERE id = ${req.params.id}`, (err, result) =>{
+        if(!err){
+            res.send(result.rows);
+        }
+    });
+    client.end;
+};
 
-module.exports = {newSession, getSessions};
+
+module.exports = {newSession, getSessions, getSession};
