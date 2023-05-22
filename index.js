@@ -1,33 +1,25 @@
+/*
 const client = require('./connection.js')
-
-const express = require('express');
-
-const bodyParser = require("body-parser");
+const app = require('./app.js');
 
 const sessionsRouter = require('./routes/session.js');
 const usersRouter = require('./routes/users.js');
 //const filesRouter = require('./routes/files.js');
 
-const app = express();
-
-app.use(bodyParser.json());
-app.use(express.json());
-
 app.use('/', sessionsRouter);
 app.use('/', usersRouter);
 //app.use('/', filesRouter);
 
-// ~~~~~~~~~~
-const fileUpload = require('express-fileupload');
-const cors = require('cors');
-const morgan = require('morgan');
-const _ = require('lodash');
+const port = process.env.PORT || 3000;
+app.listen(3000, () => console.log(`Listening on port ${port} . . .`));
 
-app.use(fileUpload({
-  createParentPath: true
-}));
-app.use(cors());
-app.use(morgan('dev'));
+client.connect();
+*/
+
+const client = require('./connection.js')
+const app = require('./app.js');
+
+// ~~~~~~~~~~
 
 app.post('/api/uploads/:id', async (req, res) => {
   try {
