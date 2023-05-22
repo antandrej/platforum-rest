@@ -21,6 +21,12 @@ const app = require('./app.js');
 
 // ~~~~~~~~~~
 
+const sessionsRouter = require('./routes/session.js');
+const usersRouter = require('./routes/users.js');
+
+app.use('/', sessionsRouter);
+app.use('/', usersRouter);
+
 app.post('/api/uploads/:id', async (req, res) => {
   try {
       if(!req.files) {

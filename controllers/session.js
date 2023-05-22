@@ -1,57 +1,72 @@
 const client = require('../connection')
 
-const newSession = (req, res, next) => {
-    const session = req.body;
-    //let insertQuery = `INSERT INTO sessions(title, name, modname, picture) VALUES('${session.title}', '${session.name}', '${session.modname}', '${session.picture}')`;
-    let insertQuery = `INSERT INTO sessions(title, name, modname, picture, time) VALUES('${session.title}', '${session.name}', 'Dorothy Peterson', 'assets/images/person1.png', '${session.time}')`;
+const newSession = async (req, res, next) => {
+    try {
+        const params = [req.body.title, req.body.name, req.body.time];
+        //let insertQuery = `INSERT INTO sessions(title, name, modname, picture) VALUES('${session.title}', '${session.name}', '${session.modname}', '${session.picture}')`;
+        const query = `INSERT INTO sessions(title, name, modname, picture, time) VALUES($1, $2, 'Dorothy Peterson', 'assets/images/person1.png', $3)`;
 
-    client.query(insertQuery, (err, result) =>{
-        if(!err){
-            res.send('Session added!');
-        }
-        else{
-            res.send(err.message);
-        }
-    });
-    client.end;
+        const sessions = await client.query(query, params);
+
+        res.send('Session added! \n');
+
+        client.end;
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 };
 
-const getSessions = (req, res, next) => {
-    client.query('SELECT * FROM sessions ORDER BY id DESC', (err, result) =>{
-        if(!err){
-            res.send(result.rows);
-        }
-    });
-    client.end;
+const getSessions = async (req, res, next) => {
+    try {
+        const query = 'SELECT * FROM sessions ORDER BY id DESC';
+
+        const sessions = await client.query(query);
+
+        res.send(sessions.rows);
+
+        client.end;
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 };
 
-const getSession = (req, res, next) => {
-    client.query(`SELECT * FROM sessions WHERE id = ${req.params.id}`, (err, result) =>{
-        if(!err){
-            res.send(result.rows);
-        }
-    });
-    client.end;
+const getSession = async (req, res, next) => {
+    try {
+        const params = [req.params.id];
+        const query = `SELECT * FROM sessions WHERE id = $1`;
+
+        const session = await client.query(query, params);
+
+        res.send(session.rows);
+
+        client.end;
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 };
 
-const updateSession = (req, res, next) => {
-    let session = req.body;
-    let updateQuery =   `UPDATE sessions SET 
-                        title = '${session.title}', 
-                        name = '${session.name}', 
-                        time = '${session.time}'
-                        WHERE id = ${session.id}`;
-    
-    client.query(updateQuery, (err, result) =>{
-        if(!err){
-            res.send('session updated !');
-        }
-        else{
-            res.send(err.message);
-        }
-    });
-    client.end;
+const updateSession = async (req, res, next) => {
+    try {
+        const params = [req.body.title, req.body.name, req.body.time, req.params.id];
+        const query = `UPDATE sessions SET 
+                        title = $1, 
+                        name = $2, 
+                        time = $3
+                        WHERE id = $4`;
+
+        const usession = await client.query(query, params);
+
+        res.send('session updated !\n');
+
+        client.end;
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 };
 
 
-module.exports = {newSession, getSessions, getSession, updateSession};
+module.exports = { newSession, getSessions, getSession, updateSession };

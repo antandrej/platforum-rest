@@ -1,12 +1,18 @@
 const client = require('../connection')
 
-const getUsers = (req, res, next) => {
-    client.query('SELECT * FROM usersp ORDER BY id', (err, result) =>{
-        if(!err){
-            res.send(result.rows);
-        }
-    });
-    client.end;
+const getUsers = async (req, res, next) => {
+    try {
+        const query = 'SELECT * FROM usersp ORDER BY id'
+
+        const users = await client.query(query);
+
+        res.send(users.rows);
+
+        client.end;
+    }
+    catch (err) {
+        console.log(err.message);
+    }
 };
 
-module.exports = {getUsers};
+module.exports = { getUsers };
