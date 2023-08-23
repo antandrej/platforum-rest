@@ -19,6 +19,9 @@ client.connect();
 const client = require('./connection.js')
 const app = require('./app.js');
 
+const fs = require('fs');
+const path = require('path');
+
 // ~~~~~~~~~~
 
 const sessionsRouter = require('./routes/session.js');
@@ -35,13 +38,10 @@ app.post('/api/uploads/:id', async (req, res) => {
               message: 'No file uploaded'
           });
       } else {
-          //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
           let avatar = req.files.avatar;
           
-          //Use the mv() method to place the file in the upload directory (i.e. "uploads")
           avatar.mv(`./uploads/${req.params.id}/${avatar.name}`);
 
-          //send response
           res.send({
               status: true,
               message: 'File is uploaded',
@@ -56,6 +56,36 @@ app.post('/api/uploads/:id', async (req, res) => {
       res.status(500).send(err);
   }
 });
+
+
+app.get('/api/uploads/:id', (req, res) => {
+    const folderPath = `./uploads/${req.params.id}`;
+  
+    fs.readdir(folderPath, (err, files) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+  
+      res.send({
+        status: true,
+        message: 'List of files',
+        data: files
+      });
+    });
+  });
+
+  app.get('/api/uploads/:id/:fileName', (req, res) => {
+    const filePath = path.join(__dirname, 'uploads', req.params.id, req.params.fileName);
+  
+    res.download(filePath, req.params.fileName, (err) => {
+      if (err) {
+        console.error('Error downloading file:', err);
+        res.status(500).send('Error downloading file');
+      }
+    });
+  });
+
 // ~~~~~~~~~~
 
 const port = process.env.PORT || 3000;
